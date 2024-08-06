@@ -56,15 +56,11 @@ public class Solver extends Backtracking<Point,Integer> {
     @Override
     protected void assegna(Point ps, Integer v) {
         board[ps.getM()][ps.getN()]=v;
-        Cage c = findCage(ps);
-        c.getPoints().put(ps,v);
     }
 
     @Override
     protected void deassegna(Point ps, Integer integer) {
         board[ps.getM()][ps.getN()]=0;
-        Cage c = findCage(ps);
-        c.getPoints().put(ps,null);
     }
 
     @Override
@@ -127,7 +123,13 @@ public class Solver extends Backtracking<Point,Integer> {
         }
         boolean all = true;
         for (Cage c : cages) {
-            List<Integer> nums = new ArrayList<>(c.getPoints().values()).stream().filter(Objects::nonNull).collect(Collectors.toList());
+            List<Integer> nums = new ArrayList<>();
+            for(Point punt:c.getPoints()){
+                if(board[punt.getM()][punt.getN()]!=0)
+                    nums.add(board[punt.getM()][punt.getN()]);
+            }
+            if(nums.size()!=c.getPoints().size())
+                return false;
             int ris = 0;
             if(nums.size()>1){
                  ris=c.getOperation().calculate(nums);
@@ -140,15 +142,15 @@ public class Solver extends Backtracking<Point,Integer> {
         }
         return true;
     }
-    private Cage findCage(Point p){
-        for(Cage c:cages){
-            for(Point pc : c.getPoints().keySet()){
-                if(pc.equals(p))
-                    return c;
-            }
-        }
-        return null;
-    }
+//    private Cage findCage(Point p){
+//        for(Cage c:cages){
+//            for(Point pc : c.getPoints().keySet()){
+//                if(pc.equals(p))
+//                    return c;
+//            }
+//        }
+//        return null;
+//    }
     public static void main(String ... args){
 //        Cage c1 = new Cage();//
 //        c1.operation=Operations.Operation.MUL;
@@ -216,56 +218,60 @@ public class Solver extends Backtracking<Point,Integer> {
 //        cages.add(c7);
 //        cages.add(c8);
 //n2
-//        Cage c1 = new Cage();
-//        c1.setOperation(new Multiplicazione());
-//        c1.setTarget(4);
-//        Point p = new Point(1,2);
-//        Point p1 = new Point(2,2);
-//        Point p2 = new Point(1,3);
-//        c1.getPoints().put(p,null);c1.getPoints().put(p1,null);c1.getPoints().put(p2,null);
-//
-//        Cage c2 = new Cage();//
-//        c2.setOperation(new Somma());
-//        c2.setTarget(10);
-//        p = new Point(1,0);
-//        p1 = new Point(1,1);
-//        p2 = new Point(2,1);
-//        c2.getPoints().put(p,null);c2.getPoints().put(p1,null);c2.getPoints().put(p2,null);
-//
-//        Cage c3 = new Cage();//
-//        c3.setOperation(new Multiplicazione());
-//        c3.setTarget(8);
-//        p = new Point(0,0);
-//        p1 = new Point(0,1);
-//        c3.getPoints().put(p,null);c3.getPoints().put(p1,null);
-//
-//        Cage c4 = new Cage();//
-//        c4.setOperation(new Somma());
-//        c4.setTarget(1);
-//        p = new Point(2,0);
-//        c4.getPoints().put(p,null);
-//
-//        Cage c5 = new Cage();//
-//        c5.setOperation(new Somma());
-//        c5.setTarget(4);
-//        p = new Point(0,2);
-//        p1 = new Point(0,3);
-//        c5.getPoints().put(p,null);c5.getPoints().put(p1,null);
-//
-//        Cage c6 = new Cage();//
-//        c6.setOperation(new Somma());
-//        c6.setTarget(3);
-//        p = new Point(3,0);
-//        p1 = new Point(3,1);
-//        c6.getPoints().put(p,null);c6.getPoints().put(p1,null);
-//
-//        Cage c7 = new Cage();//
-//        c7.setOperation(new Somma());
-//        c7.setTarget(11);
-//        p = new Point(3,2);
-//        p1 = new Point(3,3);
-//        p2 = new Point(2,3);
-//        c7.getPoints().put(p,null);c7.getPoints().put(p1,null);c7.getPoints().put(p2,null);
+
+        Point p = new Point(1,2);
+        Point p1 = new Point(2,2);
+        Point p2 = new Point(1,3);
+        ArrayList<Point> points = new ArrayList<>();
+        points.add(p);points.add(p1);points.add(p2);
+        Cage c1 = new Cage(points,4,new Multiplicazione());
+
+
+
+        p = new Point(1,0);
+        p1 = new Point(1,1);
+        p2 = new Point(2,1);
+        points = new ArrayList<>();
+        points.add(p);points.add(p1);points.add(p2);
+        Cage c2 = new Cage(points,10,new Somma());//
+
+
+
+        p = new Point(0,0);
+        p1 = new Point(0,1);
+        points = new ArrayList<>();
+        points.add(p);points.add(p1);
+        Cage c3 = new Cage(points,8,new Multiplicazione());//
+
+
+
+        p = new Point(2,0);
+        points = new ArrayList<>();
+        points.add(p);
+        Cage c4 = new Cage(points,1,new Somma());//
+
+        p = new Point(0,2);
+        p1 = new Point(0,3);
+        points = new ArrayList<>();
+        points.add(p);points.add(p1);
+        Cage c5 = new Cage(points,4,new Somma());//
+
+
+
+        p = new Point(3,0);
+        p1 = new Point(3,1);
+        points = new ArrayList<>();
+        points.add(p);points.add(p1);
+        Cage c6 = new Cage(points,3,new Somma());//
+
+
+
+        p = new Point(3,2);
+        p1 = new Point(3,3);
+        p2 = new Point(2,3);
+        points = new ArrayList<>();
+        points.add(p);points.add(p1);points.add(p2);
+        Cage c7 = new Cage(points,11,new Somma());//
 
 //        Cage c8 = new Cage();//
 //        c8.operation=Operations.Operation.MINUS;
@@ -274,19 +280,19 @@ public class Solver extends Backtracking<Point,Integer> {
 //        p1 = new Point(2,3);
 //        c8.points.put(p,null);c8.points.put(p1,null);
 
-//        ArrayList<Cage> cages = new ArrayList<>();
-//        cages.add(c1);
-//        cages.add(c2);
-//        cages.add(c3);
-//        cages.add(c4);
-//        cages.add(c5);
-//        cages.add(c6);
-//        cages.add(c7);
+        ArrayList<Cage> cages = new ArrayList<>();
+        cages.add(c1);
+        cages.add(c2);
+        cages.add(c3);
+        cages.add(c4);
+        cages.add(c5);
+        cages.add(c6);
+        cages.add(c7);
         //cages.add(c8);
 
 
 
-//        new Solver(4,cages).risolvi();
+        new Solver(4,cages).risolvi();
 
     }
 }

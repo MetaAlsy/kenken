@@ -9,9 +9,9 @@ public class Board {
     private int[][] board;
     private List<Cage> cages;
 
-    public Board(int n) {
-        this.n = n;
-        this.board=new int[n][n];
+    public Board(int[][]b,List<Cage>c) {
+        this.n = b.length;
+        this.board=b;
     }
 
     public int[][] getBoard() {

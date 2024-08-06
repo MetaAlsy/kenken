@@ -2,14 +2,16 @@ package Solver;
 
 import Operations.Operation;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class Cage {
-    private HashMap<Point,Integer> points = new HashMap<>();
+    private List<Point> points = new ArrayList<Point>();
     private int target;
     private Operations.Operation operation;
 
-    public Cage(HashMap<Point, Integer> points, int target, Operation operation) {
+    public Cage(List<Point> points, int target, Operation operation) {
         this.points = points;
         this.target = target;
         this.operation = operation;
@@ -22,7 +24,7 @@ public class Cage {
         this.operation = operation;
     }
 
-    public HashMap<Point, Integer> getPoints() {
+    public List<Point> getPoints() {
         return points;
     }
 
