@@ -114,6 +114,9 @@ public class KenKenBuilder implements Builder{
     public Board build(){
         return new Board(board,cages);
     }
+    public int getN(){
+        return this.n;
+    }
 
     public static void main(String ... args){
         new KenKenBuilder(4);
