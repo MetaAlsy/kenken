@@ -8,4 +8,9 @@ public class Somma implements Operation{
     public int calculate(List<Integer> numbers) {
         return numbers.stream().reduce(0, Integer::sum);
     }
+
+    @Override
+    public String toString() {
+        return "+";
+    }
 }

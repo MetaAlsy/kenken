@@ -8,4 +8,7 @@ public class Multiplicazione implements Operation{
     public int calculate(List<Integer> numbers) {
         return numbers.stream().reduce(1, (a, b) -> a * b);
     }
+    public String toString(){
+        return "*";
+    }
 }

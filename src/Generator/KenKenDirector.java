@@ -1,6 +1,7 @@
 package Generator;
 
 import Solver.Point;
+import Solver.Solver;
 
 import java.text.BreakIterator;
 import java.util.*;
@@ -47,13 +48,14 @@ public class KenKenDirector {
     private void esplora(Point p, List<Point> reg) {
         Stack<Point> stack = new Stack<>();
         stack.push(p);
-        while(!stack.isEmpty() && reg.size()< builder.getN()){
+        int n = random.nextInt(builder.getN())+1;
+        while(!stack.isEmpty() && reg.size()< n){
             Point cand = stack.pop();
             if(points.contains(cand))
                 continue;
             points.add(cand);
             reg.add(cand);
-            List<Point> adiacenti = getAdiacenti(p.getM(),p.getN());
+            List<Point> adiacenti = getAdiacenti(cand.getM(),cand.getN());
             for(Point p1:adiacenti){
                 if(!points.contains(p1))
                     stack.push(p1);
@@ -78,6 +80,7 @@ public class KenKenDirector {
         KenKenDirector dir = new KenKenDirector(b);
         Board board = dir.createKenken();
         System.out.println(board.toString());
-
+        Solver s = new Solver(4,board.getCages());
+        s.getSoluzione();
     }
 }

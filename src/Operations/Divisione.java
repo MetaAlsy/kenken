@@ -9,4 +9,7 @@ public class Divisione implements Operation{
     public int calculate(List<Integer> numbers) {
         return numbers.stream().sorted(Comparator.reverseOrder()).skip(1).reduce(numbers.get(0), (a, b) -> a / b);
     }
+    public String toString(){
+        return "/";
+    }
 }
