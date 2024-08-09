@@ -142,6 +142,7 @@ public class Solver extends Backtracking<Point,Integer> {
         }
         return true;
     }
+
     public void getSoluzione(){
         this.risolvi();
     }

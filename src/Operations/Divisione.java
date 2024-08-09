@@ -7,7 +7,8 @@ public class Divisione implements Operation{
 
     @Override
     public int calculate(List<Integer> numbers) {
-        return numbers.stream().sorted(Comparator.reverseOrder()).skip(1).reduce(numbers.get(0), (a, b) -> a / b);
+        numbers.sort(Comparator.reverseOrder());
+        return numbers.stream().skip(1).reduce(numbers.get(0), (a, b) -> a / b);
     }
     public String toString(){
         return "/";
