@@ -10,6 +10,7 @@ public class Solver extends Backtracking<Point,Integer> {
     private final int n;
     private final int[][] board;
     private final List<Cage> cages;
+    private List<int[][]> soluzioni = new ArrayList<>();
     public Solver(int n, List<Cage> cages){
         this.n=n;
         this.board = new int[n][n];
@@ -140,11 +141,20 @@ public class Solver extends Backtracking<Point,Integer> {
             if(ris != c.getTarget())
                 return false;
         }
+        aggiungiSoluzione(board);
         return true;
     }
 
-    public void getSoluzione(){
+    private void aggiungiSoluzione(int[][] board) {
+        int[][] s = new int[n][n];
+        for(int i=0;i<n;i++)
+            s[i]=board[i].clone();
+        soluzioni.add(s);
+    }
+
+    public int[][] getSoluzione(){
         this.risolvi();
+        return soluzioni.get(0);
     }
 //    private Cage findCage(Point p){
 //        for(Cage c:cages){

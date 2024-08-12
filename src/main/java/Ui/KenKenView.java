@@ -63,32 +63,15 @@ public class KenKenView extends JFrame {
         createButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String opration = JOptionPane.showInputDialog("Entra operazione");
-                String target = JOptionPane.showInputDialog("Entra target:");
-                if(opration!=null && target!=null){
-
-                    List<Point> punt = new ArrayList<>(punti);
-                    puntiVisitati.addAll(punti);
-                    punti.clear();
-                    switch (opration){
-                        case "*" :
-                            b.getCages().add(new Cage(punt,Integer.valueOf(target),new Multiplicazione()));
-                            break;
-                        case "+":
-                            b.getCages().add(new Cage(punt,Integer.valueOf(target),new Somma()));
-                            break;
-                        case "-":
-                            b.getCages().add(new Cage(punt,Integer.valueOf(target),new Sottrazione()));
-                            break;
-                        case "/":
-                            b.getCages().add(new Cage(punt,Integer.valueOf(target),new Divisione()));
-                            break;
-                        default:
-                            JOptionPane.showMessageDialog(null,"Operazione sconosciuta");
-                    }
-
+//                String opration = JOptionPane.showInputDialog("Entra operazione");
+//                String target = JOptionPane.showInputDialog("Entra target:");
+//                if(opration!=null && target!=null){
+//                    List<Point> punt = new ArrayList<>(punti);
+//                    puntiVisitati.addAll(punti);
+//                    punti.clear();
+                    popUp();
                 }
-            }
+            //}
         });
         JButton createPuzzle = new JButton("Crea puzzle");
         createPuzzle.addActionListener(e -> {
@@ -99,6 +82,57 @@ public class KenKenView extends JFrame {
         validPanel.add(createButton);
         panel.add(validPanel,BorderLayout.EAST);
         mainPanel.add(panel,"ConstructScrean");
+    }
+
+    private void popUp() {
+        JDialog finestra = new JDialog();
+        finestra.setTitle("Scegli parametri");
+        finestra.setLocation(250,250);
+        finestra.setSize(270,270);
+        finestra.setLayout(new FlowLayout());
+
+        JRadioButton b1 = new JRadioButton("Somma",true);
+        JRadioButton b2 = new JRadioButton("Sottrazione");
+        JRadioButton b3 = new JRadioButton("Moltiplicazione");
+        JRadioButton b4 = new JRadioButton("Divisione");
+
+        ButtonGroup group = new ButtonGroup();
+        group.add(b1);
+        group.add(b2);
+        group.add(b3);
+        group.add(b4);
+
+        finestra.add(b1);
+        finestra.add(b2);
+        finestra.add(b3);
+        finestra.add(b4);
+
+        finestra.add(new JLabel("Inserisci il target:"));
+        JTextField numero = new JTextField(10);
+        finestra.add(numero);
+
+        JButton okButtun = new JButton("Ok");
+        finestra.add(okButtun);
+        okButtun.addActionListener(e->{
+            if(!numero.getText().isEmpty()){
+            List<Point> punt = new ArrayList<>(punti);
+            puntiVisitati.addAll(punti);
+            punti.clear();
+                if(b1.isSelected())
+                    b.getCages().add(new Cage(punt,Integer.valueOf(numero.getText()),new Somma()));
+                if(b2.isSelected())
+                    b.getCages().add(new Cage(punt,Integer.valueOf(numero.getText()),new Sottrazione()));
+                if(b3.isSelected())
+                    b.getCages().add(new Cage(punt,Integer.valueOf(numero.getText()),new Multiplicazione()));
+                if(b4.isSelected())
+                    b.getCages().add(new Cage(punt,Integer.valueOf(numero.getText()),new Divisione()));
+                paintCage();
+                finestra.dispose();
+            }
+        });
+        finestra.setModal(true);
+        finestra.setVisible(true);
+
     }
 
     private void createBoard() {
@@ -126,8 +160,21 @@ public class KenKenView extends JFrame {
             }
         });
 
+        JButton risolviButtun = new JButton("Risolvi");
+        risolviButtun.addActionListener(a->{
+            Solver solver = new Solver(size,b.getCages());
+            int[][] soluzione = solver.getSoluzione();
+            for(int i=0;i<size;i++){
+                for(int j=0;j<size;j++){
+                    JTextField f = (JTextField) boardGUI[i][j].getComponent(0);
+                    f.setText(String.valueOf(soluzione[i][j]));
+                }
+            }
+        });
+
         controllPannel.add(checkButtun);
         controllPannel.add(returnButtun);
+        controllPannel.add(risolviButtun);
 
         panel.add(controllPannel,BorderLayout.SOUTH);
         mainPanel.add(panel,"BoardScrean");
@@ -228,7 +275,7 @@ public class KenKenView extends JFrame {
     private void addTarget(JPanel jPanel, String inp) {
         JLabel l = new JLabel(inp);
         l.setBounds(5,0,30,18);
-        l.setFont(new Font("Arial",Font.PLAIN,12));
+        l.setFont(new Font("Arial",Font.BOLD,18));
 
         jPanel.add(l);
         jPanel.revalidate();
@@ -236,9 +283,9 @@ public class KenKenView extends JFrame {
     }
     private void inserisciValore(int m,int n, String v){
         if(v!=null && !v.isEmpty()){
-        int val=Integer.parseInt(v);
-        if(val<=size && val>0)
-            b.getBoard()[m][n]=val;
+            int val=Integer.parseInt(v);
+            if(val<=size && val>0)
+                b.getBoard()[m][n]=val;
         }
     }
     private void inizializza(){
@@ -306,6 +353,12 @@ public class KenKenView extends JFrame {
                 });
             }
         }
+        paintCage();
+        boardPanel.revalidate();
+        boardPanel.repaint();
+    }
+
+    private void paintCage() {
         for(Cage c:b.getCages()){
             Random random = new Random();
             Color color = Color.getHSBColor(random.nextFloat(),0.6f,0.8f);
@@ -326,10 +379,7 @@ public class KenKenView extends JFrame {
                 boardGUI[p.getM()][p.getN()].setBorder(BorderFactory.createMatteBorder(top,left,bottom,right,Color.BLACK));
             }
         }
-        boardPanel.revalidate();
-        boardPanel.repaint();
     }
-
 
 
     public static void main(String... args){
