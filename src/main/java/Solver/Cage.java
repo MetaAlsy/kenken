@@ -2,11 +2,12 @@ package Solver;
 
 import Operations.Operation;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class Cage {
+public class Cage implements Serializable {
     private List<Point> points = new ArrayList<Point>();
     private int target;
     private Operations.Operation operation;

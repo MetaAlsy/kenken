@@ -1,8 +1,9 @@
 package Solver;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Point {
+public class Point implements Serializable {
     private final int m;
     private final int n;
     public Point(int x,int y){
