@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Board implements Serializable {
-    private final int n;
+    private  int n;
     private int[][] board;
     private List<Cage> cages;
 
@@ -64,7 +64,9 @@ public class Board implements Serializable {
         }
         return true;
     }
-
+    public int getN(){
+        return this.n;
+    }
     public List<Cage> getCages() {
         return cages;
     }

@@ -49,4 +49,7 @@ public class BoardConnection {
         }
         return ret;
     }
+    public Connection getConnection(){
+        return connection;
+    }
 }

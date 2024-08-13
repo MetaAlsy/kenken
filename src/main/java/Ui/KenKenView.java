@@ -10,14 +10,20 @@ import Operations.Sottrazione;
 import Solver.Cage;
 import Solver.Point;
 import Solver.Solver;
+import repository.BoardConnection;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -26,7 +32,8 @@ import java.util.Random;
 public class KenKenView extends JFrame {
     private int size;
     private CardLayout cardLayout;
-    private JPanel mainPanel,boardPanel,constructPanel;
+    private DefaultTableModel tableModel;
+    private JPanel mainPanel,boardPanel,constructPanel,repoPanel;
     private KenKenDirector director;
     private JPanel[][] boardGUI;
     private Board b;
@@ -47,8 +54,45 @@ public class KenKenView extends JFrame {
         createStart();
         createBoard();
         createConstruct();
+        createRepo();
         add(mainPanel);
 
+    }
+
+    private void createRepo() {
+        JPanel panel = new JPanel(new BorderLayout());
+        repoPanel = new JPanel();
+        panel.add(repoPanel,BorderLayout.CENTER);
+        tableModel = new DefaultTableModel(new Object[]{"ID","Nome","Board"},0);
+        JTable table = new JTable(tableModel);
+        JScrollPane scroll = new JScrollPane(table);
+        panel.add(scroll,BorderLayout.CENTER);
+        JButton eliminaButtun = new JButton("Elimina");
+        JButton tornaButton = new JButton("Torna nel menu");
+        JPanel buttunPannel = new JPanel();
+        buttunPannel.add(eliminaButtun);
+        buttunPannel.add(tornaButton);
+        panel.add(buttunPannel,BorderLayout.SOUTH);
+        loadData();
+
+        mainPanel.add(panel,"RepoScrean");
+    }
+
+    private void loadData() {
+        BoardConnection boardConnection = new BoardConnection();
+        Connection c = boardConnection.getConnection();
+        try {
+            Statement st = c.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM Board");
+            while (rs.next()){
+                int id = rs.getInt("id");
+                String name = rs.getString("name");
+                byte[] board = rs.getBytes("Board_data");
+                tableModel.addRow(new Object[]{id,name,board});
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void createConstruct() {
@@ -202,16 +246,7 @@ public class KenKenView extends JFrame {
         sizeButtonPanel.add(big);
         sizePanel.add(sizeButtonPanel);
 
-        JRadioButton somma = new JRadioButton("Somma",true);
-        JRadioButton sottrazioen = new JRadioButton("Sottrazioen",true);
-        JRadioButton multiplicazione = new JRadioButton("Multiplicazione",false);
-        JRadioButton divisione = new JRadioButton("Divisione",false);
 
-        JPanel opPanel = new JPanel();
-        opPanel.add(somma);
-        opPanel.add(sottrazioen);
-        opPanel.add(multiplicazione);
-        opPanel.add(divisione);
 
         JButton startButtun = new JButton("Start");
         startButtun.setFont(new Font("Times New Roman",Font.BOLD,15));
@@ -261,13 +296,17 @@ public class KenKenView extends JFrame {
                 cardLayout.show(mainPanel,"ConstructScrean");
             }
         });
+        JButton repoButton = new JButton("Salvati");
+        repoButton.addActionListener(a->{
+            cardLayout.show(mainPanel,"RepoScrean");
+        });
 
 
         startPanel.add(initialLable);
-
+        starPanel.add(repoButton);
         startPanel.add(sizePanel);
-        startPanel.add(new JLabel("Seleziona operazioni",JLabel.CENTER));
-        startPanel.add(opPanel);
+
+
         startPanel.add(starPanel);
         mainPanel.add(startPanel,"StartScrean");
     }
@@ -319,38 +358,38 @@ public class KenKenView extends JFrame {
                 });
                 boardGUI[i][j].add(textField);
                 boardPanel.add(boardGUI[i][j]);
-                boardGUI[i][j].addMouseListener(new MouseListener() {
-                    @Override
-                    public void mouseClicked(MouseEvent e) {
-
-                    }
-
-                    @Override
-                    public void mousePressed(MouseEvent e) {
-                        if(SwingUtilities.isRightMouseButton(e)){
-                            String inp = JOptionPane.showInputDialog("Inserisci target: ");
-                            if(inp!=null && !inp.isEmpty())
-                                addTarget(boardGUI[m][n],inp);
-                        }else{
-
-                        }
-                    }
-
-                    @Override
-                    public void mouseReleased(MouseEvent e) {
-
-                    }
-
-                    @Override
-                    public void mouseEntered(MouseEvent e) {
-
-                    }
-
-                    @Override
-                    public void mouseExited(MouseEvent e) {
-
-                    }
-                });
+//                boardGUI[i][j].addMouseListener(new MouseListener() {
+//                    @Override
+//                    public void mouseClicked(MouseEvent e) {
+//
+//                    }
+//
+//                    @Override
+//                    public void mousePressed(MouseEvent e) {
+//                        if(SwingUtilities.isRightMouseButton(e)){
+//                            String inp = JOptionPane.showInputDialog("Inserisci target: ");
+//                            if(inp!=null && !inp.isEmpty())
+//                                addTarget(boardGUI[m][n],inp);
+//                        }else{
+//
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void mouseReleased(MouseEvent e) {
+//
+//                    }
+//
+//                    @Override
+//                    public void mouseEntered(MouseEvent e) {
+//
+//                    }
+//
+//                    @Override
+//                    public void mouseExited(MouseEvent e) {
+//
+//                    }
+//                });
             }
         }
         paintCage();
