@@ -123,5 +123,10 @@ public class ConstructPanel extends JPanel {
         finestra.setModal(true);
         finestra.setVisible(true);
     }
+    public void reset() {
+        constructPanel.removeAll();
+        constructPanel.revalidate();
+        constructPanel.repaint();
+    }
 
 }

@@ -152,9 +152,9 @@ public class Solver extends Backtracking<Point,Integer> {
         soluzioni.add(s);
     }
 
-    public int[][] getSoluzione(){
+    public List<int[][]> getSoluzione(){
         this.risolvi();
-        return soluzioni.get(0);
+        return soluzioni;
     }
 //    private Cage findCage(Point p){
 //        for(Cage c:cages){

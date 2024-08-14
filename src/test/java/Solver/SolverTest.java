@@ -83,7 +83,7 @@ class SolverTest {
                 {1,3,2,4},
                 {2,1,4,3}
         } ;
-        assertArrayEquals(soluzione,s.getSoluzione());
+        assertArrayEquals(soluzione,s.getSoluzione().get(0));
     }
     @Test
     void test2(){
@@ -92,7 +92,7 @@ class SolverTest {
         Board board = dir.createKenken();
         System.out.println(board.toString());
         Solver s = new Solver(4,board.getCages());
-        assertArrayEquals(board.getBoard(), s.getSoluzione());
+        assertArrayEquals(board.getBoard(), s.getSoluzione().get(0));
     }
 
 }

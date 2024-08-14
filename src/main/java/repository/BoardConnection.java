@@ -52,4 +52,20 @@ public class BoardConnection {
     public Connection getConnection(){
         return connection;
     }
+
+    public void deletePuzzle(int id) {
+        try{
+            PreparedStatement ps = connection.prepareStatement("delete from Board where id=? ");
+            ps.setInt(1,id);
+            ps.execute();
+            if(ps.executeUpdate()>0){
+                System.out.println("Eliminato");
+            }else
+                System.out.println("Qualcosa e andato storto");
+
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

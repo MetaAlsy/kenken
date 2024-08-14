@@ -92,7 +92,8 @@ public class KenKenBuilder implements Builder{
         List<Integer> l= new ArrayList<>();
         for(Point p:points)
             l.add(board[p.getM()][p.getN()]);
-        cages.add(new Cage(points,l.stream().sorted().reduce(0, (a, b) -> Math.abs(a - b)),new Sottrazione()));
+        l.sort(Comparator.reverseOrder());
+        cages.add(new Cage(points,l.stream().reduce(0, (a, b) -> Math.abs(a - b)),new Sottrazione()));
     }
 
     @Override
@@ -109,10 +110,11 @@ public class KenKenBuilder implements Builder{
         List<Integer> l= new ArrayList<>();
         for(Point p:points)
             l.add(board[p.getM()][p.getN()]);
-        cages.add(new Cage(points,l.stream().sorted(Comparator.reverseOrder()).skip(1).reduce(l.get(0), (a, b) -> a / b),new Divisione()));
+        l.sort(Comparator.reverseOrder());
+        cages.add(new Cage(points,l.stream().skip(1).reduce(l.get(0), (a, b) -> a / b),new Divisione()));
     }
     public Board build(){
-        return new Board(board,cages);
+        return new Board(new int[n][n],cages);
     }
     public int getN(){
         return this.n;

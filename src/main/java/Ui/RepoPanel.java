@@ -24,9 +24,31 @@ public class RepoPanel extends JPanel {
         add(scrol,BorderLayout.CENTER);
         JButton eliminaButtun = new JButton("Elimina");
         JButton tornaButton = new JButton("Torna nel menu");
-        eliminaButtun.addActionListener(e->controller.elimina(table));
+        JButton caricaButton = new JButton("Carica");
+        caricaButton.addActionListener(e->{
+            int row = table.getSelectedRow();
+            if(row!=-1){
+                byte[] buf = (byte[]) tableModel.getValueAt(row,2);
+                controller.carica(buf);
+            }else{
+                JOptionPane.showMessageDialog(this,"Seleziona una riga prima di caricare");
+            }
+        });
+        eliminaButtun.addActionListener(e->{
+            int row = table.getSelectedRow();
+            if(row!=-1){
+                int id = (int)tableModel.getValueAt(row,0);
+                int resp = JOptionPane.showConfirmDialog(null,"Sei sicuro di voler eliminare puzle: "+id,"Conferma",JOptionPane.YES_NO_OPTION,JOptionPane.WARNING_MESSAGE);
+                if(resp==JOptionPane.YES_OPTION){
+                    controller.elimina(id);
+                    tableModel.removeRow(row);
+                    JOptionPane.showMessageDialog(null,"Puzzle eliminato");
+                }
+            }
+        });
         tornaButton.addActionListener(e->controller.returnToMenu());
         JPanel buttunPannel = new JPanel();
+        buttunPannel.add(caricaButton);
         buttunPannel.add(eliminaButtun);
         buttunPannel.add(tornaButton);
         add(buttunPannel,BorderLayout.SOUTH);

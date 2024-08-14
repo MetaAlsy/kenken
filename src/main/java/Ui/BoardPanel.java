@@ -8,6 +8,7 @@ import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.plaf.basic.BasicArrowButton;
 import java.awt.*;
 import java.util.Random;
 
@@ -16,6 +17,7 @@ public class BoardPanel extends JPanel {
     private JPanel[][] boardGUI;
     private JPanel boardPanel;
     private int size;
+    private JLabel countLabel;
 
     public BoardPanel(KenKenController controller){
         this.controller = controller;
@@ -32,12 +34,46 @@ public class BoardPanel extends JPanel {
 
         JButton risolviButtun = new JButton("Risolvi");
         risolviButtun.addActionListener(a->controller.solvePuzzle());
-
+        BasicArrowButton nButton = new BasicArrowButton(BasicArrowButton.EAST);
+        nButton.addActionListener(e->controller.showNextSol());
+        BasicArrowButton pButton = new BasicArrowButton(BasicArrowButton.WEST);
+        pButton.addActionListener(e->controller.showPriviusSol());
+        JButton salvaButtun = new JButton("Salva");
+        salvaButtun.addActionListener(e->{
+            popUp();});
+        countLabel = new JLabel();
+        countLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        controlPannel.add(salvaButtun);
         controlPannel.add(checkButtun);
         controlPannel.add(returnButtun);
         controlPannel.add(risolviButtun);
+        controlPannel.add(pButton);
+        controlPannel.add(countLabel);
+        controlPannel.add(nButton);
         add(controlPannel,BorderLayout.SOUTH);
     }
+
+    private void popUp() {
+        JDialog finestra = new JDialog();
+        finestra.setTitle("Salva puzzle");
+        finestra.setLocation(250,250);
+        finestra.setSize(270,270);
+        finestra.setLayout(new FlowLayout());
+        JTextField textField = new JTextField(20);
+        finestra.add(textField);
+        JButton okButtun = new JButton("Ok");
+        finestra.add(okButtun);
+        okButtun.addActionListener(e->{
+            String name = textField.getText();
+            if(!name.isEmpty()){
+                controller.save(name);
+                finestra.dispose();
+            }
+        });
+        finestra.setModal(true);
+        finestra.setVisible(true);
+    }
+
     public void initBoard(Board board){
 
         this.size = board.getN();
@@ -51,15 +87,20 @@ public class BoardPanel extends JPanel {
                 boardPanel.add(boardGUI[i][j]);
             }
         }
+
     }
-    public void updateBoard(Board board){
+    public void updateBoard(int[][] board,boolean visible){
 
         for(int i=0;i<size;i++){
             for(int j=0;j<size;j++) {
-                int v = board.getBoard()[i][j];
-                JTextField textField= new JTextField((v== 0 ? "" : String.valueOf(v)));
+                int v = board[i][j];
+                JTextField textField= new JTextField();
+                if(visible)
+                    textField.setText((v== 0 ? "" : String.valueOf(v)));
                 textField.setHorizontalAlignment(SwingConstants.CENTER);
-                textField.setBounds(0,0,50,50);
+                textField.setBounds(0,0,boardGUI[i][j].getWidth(),boardGUI[i][j].getHeight());
+                //textField.setPreferredSize(new Dimension(50,50));
+                textField.setFont(new Font("Times New Roman",Font.BOLD,15));
                 textField.setOpaque(false);
                 textField.setBorder(null);
                 int m=i;
@@ -82,7 +123,6 @@ public class BoardPanel extends JPanel {
                 });
                 boardGUI[i][j].removeAll();
                 boardGUI[i][j].add(textField,BorderLayout.CENTER);
-                boardPanel.add(boardGUI[i][j]);
             }
         }
         BoardUtils.paintCage(controller.getCages(),boardGUI);
@@ -94,6 +134,8 @@ public class BoardPanel extends JPanel {
         boardPanel.removeAll();
         boardPanel.revalidate();
         boardPanel.repaint();
-        initBoard(controller.getBoard());
+    }
+    public void updateCount(int n){
+        countLabel.setText(String.valueOf(n));
     }
 }

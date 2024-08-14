@@ -207,7 +207,7 @@ public class KenKenView extends JFrame {
         JButton risolviButtun = new JButton("Risolvi");
         risolviButtun.addActionListener(a->{
             Solver solver = new Solver(size,b.getCages());
-            int[][] soluzione = solver.getSoluzione();
+            int[][] soluzione = solver.getSoluzione().get(0);
             for(int i=0;i<size;i++){
                 for(int j=0;j<size;j++){
                     JTextField f = (JTextField) boardGUI[i][j].getComponent(0);
