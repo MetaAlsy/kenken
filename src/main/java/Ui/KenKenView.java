@@ -3,10 +3,7 @@ package Ui;
 import Generator.Board;
 import Generator.KenKenBuilder;
 import Generator.KenKenDirector;
-import Operations.Divisione;
-import Operations.Multiplicazione;
-import Operations.Somma;
-import Operations.Sottrazione;
+import Operations.*;
 import Solver.Cage;
 import Solver.Point;
 import Solver.Solver;
@@ -163,13 +160,13 @@ public class KenKenView extends JFrame {
             puntiVisitati.addAll(punti);
             punti.clear();
                 if(b1.isSelected())
-                    b.getCages().add(new Cage(punt,Integer.valueOf(numero.getText()),new Somma()));
+                    b.getCages().add(new Cage(punt,Integer.valueOf(numero.getText()), OperationFactory.createOperation("somma")));
                 if(b2.isSelected())
-                    b.getCages().add(new Cage(punt,Integer.valueOf(numero.getText()),new Sottrazione()));
+                    b.getCages().add(new Cage(punt,Integer.valueOf(numero.getText()),OperationFactory.createOperation("sottrazione")));
                 if(b3.isSelected())
-                    b.getCages().add(new Cage(punt,Integer.valueOf(numero.getText()),new Multiplicazione()));
+                    b.getCages().add(new Cage(punt,Integer.valueOf(numero.getText()),OperationFactory.createOperation("moltiplicazione")));
                 if(b4.isSelected())
-                    b.getCages().add(new Cage(punt,Integer.valueOf(numero.getText()),new Divisione()));
+                    b.getCages().add(new Cage(punt,Integer.valueOf(numero.getText()),OperationFactory.createOperation("divisione")));
                 paintCage();
                 finestra.dispose();
             }

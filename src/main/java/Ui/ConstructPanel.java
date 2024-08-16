@@ -1,9 +1,6 @@
 package Ui;
 
-import Operations.Divisione;
-import Operations.Multiplicazione;
-import Operations.Somma;
-import Operations.Sottrazione;
+import Operations.*;
 import Solver.Cage;
 import Solver.Point;
 
@@ -109,13 +106,13 @@ public class ConstructPanel extends JPanel {
                 visitati.addAll(points);
                 points.clear();
                 if(b1.isSelected())
-                    controller.createCage(new Cage(punt,Integer.valueOf(numero.getText()),new Somma()));
+                    controller.createCage(new Cage(punt,Integer.valueOf(numero.getText()), OperationFactory.createOperation("somma")));
                 if(b2.isSelected())
-                    controller.createCage(new Cage(punt,Integer.valueOf(numero.getText()),new Sottrazione()));
+                    controller.createCage(new Cage(punt,Integer.valueOf(numero.getText()), OperationFactory.createOperation("sottrazione")));
                 if(b3.isSelected())
-                    controller.createCage(new Cage(punt,Integer.valueOf(numero.getText()),new Multiplicazione()));
+                    controller.createCage(new Cage(punt,Integer.valueOf(numero.getText()), OperationFactory.createOperation("moltiplicazione")));
                 if(b4.isSelected())
-                    controller.createCage(new Cage(punt,Integer.valueOf(numero.getText()),new Divisione()));
+                    controller.createCage(new Cage(punt,Integer.valueOf(numero.getText()), OperationFactory.createOperation("divisione")));
                 BoardUtils.paintCage(controller.getCages(),boardGUI);
                 finestra.dispose();
             }

@@ -1,5 +1,6 @@
 package Generator;
 
+import Operations.OperationFactory;
 import Solver.Point;
 import Solver.Solver;
 
@@ -7,18 +8,30 @@ import java.text.BreakIterator;
 import java.util.*;
 
 public class KenKenDirector {
-    Random random = new Random();
+    private Random random = new Random();
     private KenKenBuilder builder;
     private Set<Point> points;
+    private int n;
+    private int[][] board;
 
     public KenKenDirector(KenKenBuilder b){
         this.builder=b;
         this.points=new HashSet<>();
+        this.n=b.getN();
+        this.board=new int[n][n];
+        for(int i=0;i<n;i++){
+            board[0][i]=i+1;
+        }
+        for(int i=1;i<n;i++){
+            for(int j=0;j<n;j++){
+                board[i][j]=board[i-1][(j+1)%n];
+            }
+        }
     }
     public Board createKenken(){
-        builder.randomRows();
-        builder.randomColumns();
-        builder.reflection();
+        randomRows();
+        randomColumns();
+        reflection();
         for(int i=0;i<builder.getN();i++){
             for(int j=0;j< builder.getN();j++){
                 Point p = new Point(i,j);
@@ -29,14 +42,14 @@ public class KenKenDirector {
                         boolean r = random.nextBoolean();
                         if(reg.size()==2){
                             if(r)
-                                builder.addMinus(reg);
+                                addMinus(reg);
                             else
-                                builder.addDiv(reg);
+                                addDiv(reg);
                         }else {
                             if(r)
-                                builder.addSum(reg);
+                                addSum(reg);
                             else
-                                builder.addMul(reg);
+                                addMul(reg);
                         }
                     }
                 }
@@ -74,6 +87,65 @@ public class KenKenDirector {
         if (n< builder.getN()-1)
             ris.add(new Point(m,n+1));
         return ris;
+    }
+    public void randomRows(){
+        for(int i=n-1;i>0;i--){
+            int r = random.nextInt(i+1);
+            int[] t = board[i];
+            board[i]=board[r];
+            board[r]=t;
+        }
+    }
+    public void randomColumns(){
+        for(int j=n-1;j>0;j-- ){
+            int r = random.nextInt(j+1);
+            int[] t = board[j];
+            board[j]=board[r];
+            board[r]=t;
+        }
+    }
+    public void reflection(){
+        for(int i=0;i<n/2;i++){
+            int [] t= board[i];
+            board[i]=board[n-1-i];
+            board[n-1-i]=t;
+        }
+    }
+
+
+    public void addSum(List<Point> points) {
+        int s=0;
+        for(Point p:points){
+            s+=board[p.getM()][p.getN()];
+        }
+        builder.addCage(s,points, OperationFactory.createOperation("somma"));
+    }
+
+
+    public void addMinus(List<Point> points) {
+        List<Integer> l= new ArrayList<>();
+        for(Point p:points)
+            l.add(board[p.getM()][p.getN()]);
+        l.sort(Comparator.reverseOrder());
+        builder.addCage(l.stream().reduce(0, (a, b) -> Math.abs(a - b)),points,OperationFactory.createOperation("sottrazione"));
+    }
+
+
+    public void addMul(List<Point> points) {
+        int m = 1;
+        for(Point p:points){
+            m = board[p.getM()][p.getN()]*m;
+        }
+        builder.addCage(m,points, OperationFactory.createOperation("moltiplicazione"));
+    }
+
+
+    public void addDiv(List<Point> points) {
+        List<Integer> l= new ArrayList<>();
+        for(Point p:points)
+            l.add(board[p.getM()][p.getN()]);
+        l.sort(Comparator.reverseOrder());
+        builder.addCage(l.stream().skip(1).reduce(l.get(0), (a, b) -> a / b),points,OperationFactory.createOperation("divisione"));
     }
     public static void main(String ... args){
         KenKenBuilder b = new KenKenBuilder(4);
