@@ -1,10 +1,9 @@
 package Generator;
 
-import Operations.OperationFactory;
+import Operations.StandardOperationFactory;
 import Solver.Point;
 import Solver.Solver;
 
-import java.text.BreakIterator;
 import java.util.*;
 
 public class KenKenDirector {
@@ -13,12 +12,14 @@ public class KenKenDirector {
     private Set<Point> points;
     private int n;
     private int[][] board;
+    private StandardOperationFactory standardOperationFactory;
 
     public KenKenDirector(KenKenBuilder b){
         this.builder=b;
         this.points=new HashSet<>();
         this.n=b.getN();
         this.board=new int[n][n];
+        this.standardOperationFactory = new StandardOperationFactory();
         for(int i=0;i<n;i++){
             board[0][i]=i+1;
         }
@@ -118,7 +119,7 @@ public class KenKenDirector {
         for(Point p:points){
             s+=board[p.getM()][p.getN()];
         }
-        builder.addCage(s,points, OperationFactory.createOperation("somma"));
+        builder.addCage(s,points, standardOperationFactory.createSum());
     }
 
 
@@ -127,7 +128,7 @@ public class KenKenDirector {
         for(Point p:points)
             l.add(board[p.getM()][p.getN()]);
         l.sort(Comparator.reverseOrder());
-        builder.addCage(l.stream().reduce(0, (a, b) -> Math.abs(a - b)),points,OperationFactory.createOperation("sottrazione"));
+        builder.addCage(l.stream().reduce(0, (a, b) -> Math.abs(a - b)),points, standardOperationFactory.createSott());
     }
 
 
@@ -136,7 +137,7 @@ public class KenKenDirector {
         for(Point p:points){
             m = board[p.getM()][p.getN()]*m;
         }
-        builder.addCage(m,points, OperationFactory.createOperation("moltiplicazione"));
+        builder.addCage(m,points, standardOperationFactory.createMul());
     }
 
 
@@ -145,7 +146,7 @@ public class KenKenDirector {
         for(Point p:points)
             l.add(board[p.getM()][p.getN()]);
         l.sort(Comparator.reverseOrder());
-        builder.addCage(l.stream().skip(1).reduce(l.get(0), (a, b) -> a / b),points,OperationFactory.createOperation("divisione"));
+        builder.addCage(l.stream().skip(1).reduce(l.get(0), (a, b) -> a / b),points, standardOperationFactory.createDiv());
     }
     public static void main(String ... args){
         KenKenBuilder b = new KenKenBuilder(4);

@@ -10,19 +10,19 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class ConstructPanel extends JPanel {
     private KenKenController controller;
     private JPanel[][] boardGUI;
     private JPanel constructPanel;
-    private int size;
+    private StandardOperationFactory standardOperationFactory;
     private List<Point> points, visitati;
 
     public ConstructPanel(KenKenController controller){
         this.controller= controller;
         this.points = new ArrayList<>();
         this.visitati = new ArrayList<>();
+        this.standardOperationFactory = new StandardOperationFactory();
         setLayout(new BorderLayout());
         constructPanel = new JPanel();
         add(constructPanel,BorderLayout.CENTER);
@@ -42,7 +42,6 @@ public class ConstructPanel extends JPanel {
         add(controlPanel,BorderLayout.EAST);
     }
     public void initBoard(int size){
-        this.size = size;
         constructPanel.setLayout(new GridLayout(size,size));
         boardGUI = new JPanel[size][size];
         for(int i=0;i<size;i++){
@@ -106,13 +105,13 @@ public class ConstructPanel extends JPanel {
                 visitati.addAll(points);
                 points.clear();
                 if(b1.isSelected())
-                    controller.createCage(new Cage(punt,Integer.valueOf(numero.getText()), OperationFactory.createOperation("somma")));
+                    controller.createCage(new Cage(punt,Integer.valueOf(numero.getText()), standardOperationFactory.createSum()));
                 if(b2.isSelected())
-                    controller.createCage(new Cage(punt,Integer.valueOf(numero.getText()), OperationFactory.createOperation("sottrazione")));
+                    controller.createCage(new Cage(punt,Integer.valueOf(numero.getText()), standardOperationFactory.createSott()));
                 if(b3.isSelected())
-                    controller.createCage(new Cage(punt,Integer.valueOf(numero.getText()), OperationFactory.createOperation("moltiplicazione")));
+                    controller.createCage(new Cage(punt,Integer.valueOf(numero.getText()), standardOperationFactory.createMul()));
                 if(b4.isSelected())
-                    controller.createCage(new Cage(punt,Integer.valueOf(numero.getText()), OperationFactory.createOperation("divisione")));
+                    controller.createCage(new Cage(punt,Integer.valueOf(numero.getText()), standardOperationFactory.createDiv()));
                 BoardUtils.paintCage(controller.getCages(),boardGUI);
                 finestra.dispose();
             }

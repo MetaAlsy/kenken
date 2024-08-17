@@ -10,7 +10,6 @@ import Solver.Solver;
 import repository.BoardConnection;
 
 import javax.swing.*;
-import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -22,7 +21,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -35,6 +33,7 @@ public class KenKenView extends JFrame {
     private JPanel[][] boardGUI;
     private Board b;
     private static final int C_SIZE=50;
+    private StandardOperationFactory standardOperationFactory;
 
     private List<Point> punti = new ArrayList<>();
     private List<Point> puntiVisitati = new ArrayList<>();
@@ -160,13 +159,13 @@ public class KenKenView extends JFrame {
             puntiVisitati.addAll(punti);
             punti.clear();
                 if(b1.isSelected())
-                    b.getCages().add(new Cage(punt,Integer.valueOf(numero.getText()), OperationFactory.createOperation("somma")));
+                    b.getCages().add(new Cage(punt,Integer.valueOf(numero.getText()), standardOperationFactory.createSum()));
                 if(b2.isSelected())
-                    b.getCages().add(new Cage(punt,Integer.valueOf(numero.getText()),OperationFactory.createOperation("sottrazione")));
+                    b.getCages().add(new Cage(punt,Integer.valueOf(numero.getText()), standardOperationFactory.createSott()));
                 if(b3.isSelected())
-                    b.getCages().add(new Cage(punt,Integer.valueOf(numero.getText()),OperationFactory.createOperation("moltiplicazione")));
+                    b.getCages().add(new Cage(punt,Integer.valueOf(numero.getText()), standardOperationFactory.createMul()));
                 if(b4.isSelected())
-                    b.getCages().add(new Cage(punt,Integer.valueOf(numero.getText()),OperationFactory.createOperation("divisione")));
+                    b.getCages().add(new Cage(punt,Integer.valueOf(numero.getText()), standardOperationFactory.createDiv()));
                 paintCage();
                 finestra.dispose();
             }
