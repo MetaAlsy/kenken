@@ -30,8 +30,7 @@ public class KenKenController {
      private BoardPanel boardPanel;
      private StartPanel startPanel;
      private BoardConnection boardConnection;
-     private List<int[][]> soluzioni;
-     private int n;
+     private KenKenBuilder builder;
 
      public KenKenController(MainPanel mp){
          this.mainPanel=mp;
@@ -47,7 +46,6 @@ public class KenKenController {
          mainPanel.add("RepoScrean",repoPanel);
          mainPanel.add("ConstructScrean",constructPanel);
          mainPanel.add("StartScrean",startPanel);
-         n=0;
          mainPanel.showPanel("StartScrean");
      }
 
@@ -55,6 +53,7 @@ public class KenKenController {
     public void showCreatScrean(int size) {
          constructPanel.reset();
          board = new Board(size);
+         this.builder = new KenKenBuilder(size);
          constructPanel.initBoard(size);
          mainPanel.showPanel("ConstructScrean");
     }
@@ -72,13 +71,14 @@ public class KenKenController {
          KenKenBuilder build = new KenKenBuilder(size);
          KenKenDirector director = new KenKenDirector(build);
          board=director.createKenken();
+         board.attach(boardPanel);
          boardPanel.initBoard(board);
-         SwingUtilities.invokeLater(()->boardPanel.updateBoard(board.getBoard(),false));
+         SwingUtilities.invokeLater(()->boardPanel.updateBoard(board,false));
          mainPanel.showPanel("BoardScrean");
     }
 
     public void createCage(Cage c) {
-         board.getCages().add(c);
+         builder.addCage(c);
     }
 
     public void inizia() {
@@ -86,9 +86,11 @@ public class KenKenController {
     }
 
     private void showBoardScrean() {
+         board=builder.build();
+         board.attach(boardPanel);
          boardPanel.reset();
          boardPanel.initBoard(board);
-         SwingUtilities.invokeLater(()->boardPanel.updateBoard(board.getBoard(),false));
+         SwingUtilities.invokeLater(()->boardPanel.updateBoard(board,false));
          mainPanel.showPanel("BoardScrean");
     }
 
@@ -107,13 +109,16 @@ public class KenKenController {
     }
 
     public void solvePuzzle() {
-         Solver s = new Solver(board.getN(),board.getCages());
-         soluzioni=s.getSoluzione();
-         if(!soluzioni.isEmpty()){
-             JOptionPane.showMessageDialog(boardPanel,"Puzzle ha soluzioni: "+soluzioni.size());
+         Solver s = new Solver(board);
+         s.risolviKenken();
+         //soluzioni=s.getSoluzione();
+         if(board.getNumSoluzioni()>0){
+             JOptionPane.showMessageDialog(boardPanel,"Puzzle ha soluzioni: "+board.getNumSoluzioni());
 
-             boardPanel.updateCount(n + 1);
-             boardPanel.updateBoard(soluzioni.get(n),true);
+             //boardPanel.updateCount(n + 1);
+             //boardPanel.updateBoard(soluzioni.get(n),true);//updateBoard
+             //board.setBoard(soluzioni.get(n));
+             board.primaSol();
          }else {
              JOptionPane.showMessageDialog(boardPanel, "Puzzle non ha soluzioni");
              System.out.println("Nessunasoluzione");
@@ -124,11 +129,7 @@ public class KenKenController {
          boardConnection.deletePuzzle( id);
     }
     public void inserisciValore(int m,int n, String v){
-        if(v!=null && !v.isEmpty()){
-            int val=Integer.parseInt(v);
-            if(val<=board.getN() && val>0)
-                board.getBoard()[m][n]=val;
-        }
+        board.inserisciValore(m,n,v);
     }
     public List<Cage> getCages(){
          return board.getCages();
@@ -137,19 +138,25 @@ public class KenKenController {
          return board;
     }
     public void showNextSol() {
-        if(n<soluzioni.size()-1){
-            n++;
-            boardPanel.updateCount(n+1);
-            boardPanel.updateBoard(soluzioni.get(n),true);
-        }
+        board.prossimaSol();
     }
 
     public void showPriviusSol() {
-        if(n>0){
-            n--;
-            boardPanel.updateCount(n+1);
-            boardPanel.updateBoard(soluzioni.get(n),true);
-        }
+       board.precedenteSol();
+    }
+    public void carica(byte[] buf) {
+         try{
+            ByteArrayInputStream bais = new ByteArrayInputStream(buf);
+            ObjectInputStream ois = new ObjectInputStream(bais);
+
+            this.board =(Board)ois.readObject();
+            showBoardScrean();
+         } catch (IOException | ClassNotFoundException e) {
+             throw new RuntimeException(e);
+         }
+    }
+    public void save(String name) {
+         boardConnection.saveBoard(board,name);
     }
     public static void main(String... args){
          SwingUtilities.invokeLater(()->{
@@ -164,21 +171,6 @@ public class KenKenController {
              frame.setVisible(true);
          });
     }
-
-    public void carica(byte[] buf) {
-         try{
-            ByteArrayInputStream bais = new ByteArrayInputStream(buf);
-            ObjectInputStream ois = new ObjectInputStream(bais);
-
-            this.board =(Board)ois.readObject();
-            showBoardScrean();
-         } catch (IOException | ClassNotFoundException e) {
-             throw new RuntimeException(e);
-         }
-
-    }
-
-    public void save(String name) {
-         boardConnection.saveBoard(board,name);
-    }
 }
+
+

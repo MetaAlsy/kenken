@@ -1,8 +1,8 @@
 package Ui;
 
 import Generator.Board;
-import Solver.Cage;
-import Solver.Point;
+import Generator.Observer;
+import Generator.Subject;
 
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
@@ -10,9 +10,8 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.plaf.basic.BasicArrowButton;
 import java.awt.*;
-import java.util.Random;
 
-public class BoardPanel extends JPanel {
+public class BoardPanel extends JPanel implements Observer  {
     KenKenController controller;
     private JPanel[][] boardGUI;
     private JPanel boardPanel;
@@ -89,8 +88,8 @@ public class BoardPanel extends JPanel {
         }
 
     }
-    public void updateBoard(int[][] board,boolean visible){
-
+    public void updateBoard(Board b,boolean visible){
+        int[][] board = b.getBoard();
         for(int i=0;i<size;i++){
             for(int j=0;j<size;j++) {
                 int v = board[i][j];
@@ -125,17 +124,33 @@ public class BoardPanel extends JPanel {
                 boardGUI[i][j].add(textField,BorderLayout.CENTER);
             }
         }
-        BoardUtils.paintCage(controller.getCages(),boardGUI);
+        BoardUtils.paintCages(b.getCages(),boardGUI);
         boardPanel.revalidate();
         boardPanel.repaint();
     }
 
     public void reset() {
+        countLabel.setText("");
         boardPanel.removeAll();
         boardPanel.revalidate();
         boardPanel.repaint();
     }
     public void updateCount(int n){
-        countLabel.setText(String.valueOf(n));
+        if(n==0)
+            countLabel.setText(String.valueOf(""));
+        else
+            countLabel.setText(String.valueOf(n));
+    }
+
+    @Override
+    public void update(Subject subject) {
+        if(subject instanceof Board b){
+            if(b.getNumSoluzioni()>0){
+                updateCount(b.getIndex()+1);
+            }else{
+                updateCount(0);
+            }
+            updateBoard(b,true);
+        }
     }
 }

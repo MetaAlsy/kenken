@@ -20,6 +20,10 @@ public class KenKenBuilder implements Builder{
         cages.add(new Cage(points,target,opration));
         point+=points.size();
     }
+    public void addCage(Cage c){
+        cages.add(c);
+        point+=c.getPoints().size();
+    }
 
     public Board build(){
         if(n*n == point)

@@ -6,6 +6,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import java.awt.*;
+import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -55,10 +56,11 @@ public class RepoPanel extends JPanel {
     }
     public void loadData(){
         tableModel.setRowCount(0);
-        try {
-            Connection c = controller.getboardConnection().getConnection();
+        String sql = "SELECT * FROM Board";
+        try(Connection c = controller.getboardConnection().getConnection();
             Statement st = c.createStatement();
-            ResultSet rs = st.executeQuery("SELECT * FROM Board");
+            ResultSet rs = st.executeQuery(sql)){
+
             while (rs.next()){
                 int id = rs.getInt("id");
                 String name = rs.getString("name");

@@ -7,20 +7,25 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Board implements Serializable {
+public class Board extends Subject implements Serializable {
     private  int n;
     private int[][] board;
     private List<Cage> cages;
+    private List<int[][]> soluzioni;
+    private int index;
 
     public Board(int[][]b,List<Cage>c) {
         this.n = b.length;
         this.board=b;
         this.cages=c;
+        this.soluzioni = new ArrayList<>();
+        this.index = 0;
     }
     public Board(int n){
         this.n=n;
         this.board=new int[n][n];
         this.cages=new ArrayList<>();
+        this.soluzioni= new ArrayList<>();
     }
 
     public int[][] getBoard() {
@@ -70,8 +75,58 @@ public class Board implements Serializable {
     public List<Cage> getCages() {
         return cages;
     }
+    public void addCage(Cage cage){
+        cages.add(cage);
+        notifyObservers();
+    }
 
     public void setCages(List<Cage> cages) {
         this.cages = cages;
+        notifyObservers();
+    }
+    public void inserisciValore(int m,int n, String v){
+        if(v!=null && !v.isEmpty()){
+            int val=Integer.parseInt(v);
+            if(val<=this.n && val>0){
+                board[m][n]=val;
+                notifyObservers();
+            }
+        }
+    }
+    public void setBoard(int[][] board){
+        this.board=board;
+        notifyObservers();
+    }
+    public void addSoluzione(int[][] s){
+        this.soluzioni.add(s);
+    }
+    public int getNumSoluzioni(){
+        if(soluzioni!=null && !soluzioni.isEmpty())
+            return soluzioni.size();
+        return 0;
+    }
+    public void prossimaSol(){
+        if(soluzioni!=null && !soluzioni.isEmpty() && index<soluzioni.size()-1){
+            index++;
+            board = soluzioni.get(index);
+            notifyObservers();
+        }
+    }
+    public void precedenteSol(){
+        if(soluzioni!=null && !soluzioni.isEmpty() && index>0){
+            index--;
+            board = soluzioni.get(index);
+            notifyObservers();
+        }
+    }
+    public void primaSol(){
+        if(soluzioni!=null && !soluzioni.isEmpty()){
+            index = 0;
+            board = soluzioni.get(index);
+            notifyObservers();
+        }
+    }
+    public int getIndex(){
+        return index;
     }
 }

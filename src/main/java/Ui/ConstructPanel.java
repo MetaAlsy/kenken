@@ -73,7 +73,7 @@ public class ConstructPanel extends JPanel {
     private void popUp() {
         JDialog finestra = new JDialog();
         finestra.setTitle("Scegli parametri");
-        finestra.setLocation(250,250);
+
         finestra.setSize(270,270);
         finestra.setLayout(new FlowLayout());
 
@@ -104,18 +104,21 @@ public class ConstructPanel extends JPanel {
                 List<Point> punt = new ArrayList<>(points);
                 visitati.addAll(points);
                 points.clear();
+                Cage c = null;
                 if(b1.isSelected())
-                    controller.createCage(new Cage(punt,Integer.valueOf(numero.getText()), standardOperationFactory.createSum()));
+                    c=new Cage(punt,Integer.valueOf(numero.getText()), standardOperationFactory.createSum());
                 if(b2.isSelected())
-                    controller.createCage(new Cage(punt,Integer.valueOf(numero.getText()), standardOperationFactory.createSott()));
+                    c=new Cage(punt,Integer.valueOf(numero.getText()), standardOperationFactory.createSott());
                 if(b3.isSelected())
-                    controller.createCage(new Cage(punt,Integer.valueOf(numero.getText()), standardOperationFactory.createMul()));
+                    c=new Cage(punt,Integer.valueOf(numero.getText()), standardOperationFactory.createMul());
                 if(b4.isSelected())
-                    controller.createCage(new Cage(punt,Integer.valueOf(numero.getText()), standardOperationFactory.createDiv()));
-                BoardUtils.paintCage(controller.getCages(),boardGUI);
+                    c = new Cage(punt,Integer.valueOf(numero.getText()), standardOperationFactory.createDiv());
+                controller.createCage(c);
+                BoardUtils.paintCage(c,boardGUI);
                 finestra.dispose();
             }
         });
+        finestra.setLocationRelativeTo(null);
         finestra.setModal(true);
         finestra.setVisible(true);
     }

@@ -1,5 +1,6 @@
 package Solver;
 
+import Generator.Board;
 import Operations.Multiplicazione;
 import Operations.Somma;
 
@@ -11,10 +12,12 @@ public class Solver extends Backtracking<Point,Integer> {
     private final int[][] board;
     private final List<Cage> cages;
     private List<int[][]> soluzioni = new ArrayList<>();
-    public Solver(int n, List<Cage> cages){
-        this.n=n;
+    private Board puzzle;
+    public Solver(Board puzzle){
+        this.n=puzzle.getN();
         this.board = new int[n][n];
-        this.cages = cages;
+        this.cages = puzzle.getCages();
+        this.puzzle = puzzle;
     }
 
     @Override
@@ -150,12 +153,18 @@ public class Solver extends Backtracking<Point,Integer> {
         for(int i=0;i<n;i++)
             s[i]=board[i].clone();
         soluzioni.add(s);
+        puzzle.addSoluzione(s);
     }
 
     public List<int[][]> getSoluzione(){
         this.risolvi();
         return soluzioni;
     }
+    public void risolviKenken(){
+        this.risolvi();
+    }
+
+
 //    private Cage findCage(Point p){
 //        for(Cage c:cages){
 //            for(Point pc : c.getPoints().keySet()){

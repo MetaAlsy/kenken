@@ -153,7 +153,7 @@ public class KenKenDirector {
         KenKenDirector dir = new KenKenDirector(b);
         Board board = dir.createKenken();
         System.out.println(board.toString());
-        Solver s = new Solver(4,board.getCages());
+        Solver s = new Solver(board);
         s.getSoluzione();
     }
 }
