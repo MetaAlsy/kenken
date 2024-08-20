@@ -6,7 +6,7 @@ public class Somma implements Operation{
     private static final Somma inst = new Somma();
     private Somma(){}
 
-    public static Operation getInstance() {
+    public static Somma getInstance() {
         return inst;
     }
 

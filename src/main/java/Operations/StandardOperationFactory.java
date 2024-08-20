@@ -2,22 +2,22 @@ package Operations;
 
 public class StandardOperationFactory implements OperationFactory {
     @Override
-    public Operation createSum() {
+    public Somma createSum() {
         return Somma.getInstance();
     }
 
     @Override
-    public Operation createMul() {
-        return Multiplicazione.getInstance();
+    public Moltiplicazione createMul() {
+        return Moltiplicazione.getInstance();
     }
 
     @Override
-    public Operation createSott() {
+    public Sottrazione createSott() {
         return Sottrazione.getInstance();
     }
 
     @Override
-    public Operation createDiv() {
+    public Divisione createDiv() {
         return Divisione.getInstance();
     }
 }

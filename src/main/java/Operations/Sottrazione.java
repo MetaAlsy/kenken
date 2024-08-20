@@ -6,7 +6,7 @@ import java.util.List;
 public class Sottrazione implements Operation{
     private static final Sottrazione inst = new Sottrazione();
     private Sottrazione(){}
-    public static Operation getInstance() {
+    public static Sottrazione getInstance() {
         return inst;
     }
 

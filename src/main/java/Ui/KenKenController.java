@@ -3,24 +3,16 @@ package Ui;
 import Generator.Board;
 import Generator.KenKenBuilder;
 import Generator.KenKenDirector;
-import Operations.Divisione;
-import Operations.Multiplicazione;
-import Operations.Somma;
-import Operations.Sottrazione;
 import Solver.Cage;
-import Solver.Point;
 import Solver.Solver;
-import repository.BoardConnection;
+import repository.BoardService;
 
 import javax.swing.*;
-import java.awt.*;
+import java.awt.event.WindowEvent;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 
 public class KenKenController {
      private MainPanel mainPanel;
@@ -29,12 +21,12 @@ public class KenKenController {
      private ConstructPanel constructPanel;
      private BoardPanel boardPanel;
      private StartPanel startPanel;
-     private BoardConnection boardConnection;
+     private BoardService boardConnection;
      private KenKenBuilder builder;
 
      public KenKenController(MainPanel mp){
          this.mainPanel=mp;
-         this.boardConnection=new BoardConnection();
+         this.boardConnection=new BoardService("jdbc:sqlite:kenken.db");
          init();
      }
      private void init(){
@@ -52,7 +44,7 @@ public class KenKenController {
 
     public void showCreatScrean(int size) {
          constructPanel.reset();
-         board = new Board(size);
+         board = new Board(size);//non serve
          this.builder = new KenKenBuilder(size);
          constructPanel.initBoard(size);
          mainPanel.showPanel("ConstructScrean");
@@ -63,7 +55,7 @@ public class KenKenController {
          mainPanel.showPanel("RepoScrean");
     }
 
-    public BoardConnection getboardConnection() {
+    public BoardService getboardConnection() {
          return boardConnection;
     }
 
@@ -82,15 +74,15 @@ public class KenKenController {
     }
 
     public void inizia() {
+         board=builder.build();
          showBoardScrean();
     }
 
     private void showBoardScrean() {
-         board=builder.build();
          board.attach(boardPanel);
          boardPanel.reset();
          boardPanel.initBoard(board);
-         SwingUtilities.invokeLater(()->boardPanel.updateBoard(board,false));
+         SwingUtilities.invokeLater(()->board.notifica());
          mainPanel.showPanel("BoardScrean");
     }
 
@@ -148,7 +140,6 @@ public class KenKenController {
          try{
             ByteArrayInputStream bais = new ByteArrayInputStream(buf);
             ObjectInputStream ois = new ObjectInputStream(bais);
-
             this.board =(Board)ois.readObject();
             showBoardScrean();
          } catch (IOException | ClassNotFoundException e) {
@@ -156,7 +147,7 @@ public class KenKenController {
          }
     }
     public void save(String name) {
-         boardConnection.saveBoard(board,name);
+         boardConnection.saveBoard(this.board,name);
     }
     public static void main(String... args){
          SwingUtilities.invokeLater(()->{
@@ -166,6 +157,12 @@ public class KenKenController {
 
              frame.setContentPane(mainPanel);
              frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+             frame.addWindowListener(new java.awt.event.WindowAdapter(){
+                 @Override
+                 public void windowClosing(WindowEvent e) {
+                     controller.getboardConnection().close();
+                 }
+             });
              frame.setSize(500,500);
              frame.setLocationRelativeTo(null);
              frame.setVisible(true);

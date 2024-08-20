@@ -123,6 +123,8 @@ public class ConstructPanel extends JPanel {
         finestra.setVisible(true);
     }
     public void reset() {
+        points.clear();
+        visitati.clear();
         constructPanel.removeAll();
         constructPanel.revalidate();
         constructPanel.repaint();

@@ -1,12 +1,8 @@
 package Ui;
 
-import repository.BoardConnection;
-
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
 import java.awt.*;
-import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -57,8 +53,9 @@ public class RepoPanel extends JPanel {
     public void loadData(){
         tableModel.setRowCount(0);
         String sql = "SELECT * FROM Board";
-        try(Connection c = controller.getboardConnection().getConnection();
-            Statement st = c.createStatement();
+
+        try(/*Connection c = controller.getboardConnection().getConnection();*/
+            Statement st = controller.getboardConnection().getConnection().createStatement();
             ResultSet rs = st.executeQuery(sql)){
 
             while (rs.next()){

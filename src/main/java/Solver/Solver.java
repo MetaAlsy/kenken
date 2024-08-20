@@ -1,11 +1,8 @@
 package Solver;
 
 import Generator.Board;
-import Operations.Multiplicazione;
-import Operations.Somma;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class Solver extends Backtracking<Point,Integer> {
     private final int n;

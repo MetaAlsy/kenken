@@ -5,6 +5,7 @@ import Solver.Point;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Board extends Subject implements Serializable {
@@ -98,12 +99,20 @@ public class Board extends Subject implements Serializable {
         notifyObservers();
     }
     public void addSoluzione(int[][] s){
-        this.soluzioni.add(s);
+        if(!containsSol(s))
+            this.soluzioni.add(s);
     }
     public int getNumSoluzioni(){
         if(soluzioni!=null && !soluzioni.isEmpty())
             return soluzioni.size();
         return 0;
+    }
+    public boolean containsSol(int[][] s){
+        for(int[][] sol : soluzioni){
+            if(Arrays.deepEquals(sol,s))
+                return true;
+        }
+        return false;
     }
     public void prossimaSol(){
         if(soluzioni!=null && !soluzioni.isEmpty() && index<soluzioni.size()-1){
@@ -128,5 +137,8 @@ public class Board extends Subject implements Serializable {
     }
     public int getIndex(){
         return index;
+    }
+    public void notifica(){
+        notifyObservers();
     }
 }
