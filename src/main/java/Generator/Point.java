@@ -1,4 +1,4 @@
-package Solver;
+package Generator;
 
 import java.io.Serializable;
 import java.util.Objects;

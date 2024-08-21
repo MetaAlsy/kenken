@@ -1,10 +1,9 @@
-package Solver;
+package Generator;
 
 import Operations.Operation;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class Cage implements Serializable {

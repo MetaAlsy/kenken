@@ -1,7 +1,6 @@
 package Generator;
 
 import Operations.StandardOperationFactory;
-import Solver.Point;
 import Solver.Solver;
 
 import java.util.*;
@@ -147,13 +146,5 @@ public class KenKenDirector {
             l.add(board[p.getM()][p.getN()]);
         l.sort(Comparator.reverseOrder());
         builder.addCage(l.stream().skip(1).reduce(l.get(0), (a, b) -> a / b),points, standardOperationFactory.createDiv());
-    }
-    public static void main(String ... args){
-        KenKenBuilder b = new KenKenBuilder(4);
-        KenKenDirector dir = new KenKenDirector(b);
-        Board board = dir.createKenken();
-        System.out.println(board.toString());
-        Solver s = new Solver(board);
-        s.getSoluzione();
     }
 }

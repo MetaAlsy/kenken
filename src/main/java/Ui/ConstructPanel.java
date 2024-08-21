@@ -1,8 +1,8 @@
 package Ui;
 
+import Generator.*;
+import Generator.Point;
 import Operations.*;
-import Solver.Cage;
-import Solver.Point;
 
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
@@ -11,7 +11,7 @@ import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ConstructPanel extends JPanel {
+public class ConstructPanel extends JPanel implements Observer {
     private KenKenController controller;
     private JPanel[][] boardGUI;
     private JPanel constructPanel;
@@ -33,12 +33,22 @@ public class ConstructPanel extends JPanel {
         });
         JButton createPuzzle = new JButton("Crea puzzle");
         JButton returnButton = new JButton("Torna nel menu");
+        JButton undoButt = new JButton("Undo");
+        JButton redoButt = new JButton("Redo");
+        undoButt.addActionListener(e -> controller.undo());
+        redoButt.addActionListener(e -> controller.redo());
         returnButton.addActionListener(e->controller.returnToMenu());
-        createPuzzle.addActionListener(e -> controller.inizia());
+        createPuzzle.addActionListener(e ->{
+            if(boardGUI.length*boardGUI.length == visitati.size())
+                controller.inizia();
+            else
+                JOptionPane.showMessageDialog(this,"Non tutti punti appartengono alle Cage ");
+        });
         controlPanel.add(createButton);
         controlPanel.add(createPuzzle);
         controlPanel.add(returnButton);
-
+        controlPanel.add(undoButt);
+        controlPanel.add(redoButt);
         add(controlPanel,BorderLayout.EAST);
     }
     public void initBoard(int size){
@@ -114,7 +124,7 @@ public class ConstructPanel extends JPanel {
                 if(b4.isSelected())
                     c = new Cage(punt,Integer.valueOf(numero.getText()), standardOperationFactory.createDiv());
                 controller.createCage(c);
-                BoardUtils.paintCage(c,boardGUI);
+
                 finestra.dispose();
             }
         });
@@ -130,4 +140,24 @@ public class ConstructPanel extends JPanel {
         constructPanel.repaint();
     }
 
+
+    @Override
+    public void update(Subject subject) {
+        if(subject instanceof KenKenBuilder b) {
+            points.clear();
+            visitati.clear();
+            //repaint();
+            for(int i=0;i<boardGUI.length;i++) {
+                for (int j = 0; j < boardGUI.length; j++) {
+                    boardGUI[i][j].removeAll();
+                    boardGUI[i][j].setBackground(null);
+                    boardGUI[i][j].setBorder(new MatteBorder(1,1,1,1, Color.DARK_GRAY));
+                }
+            }
+            for(Cage c: b.getCages()){
+                visitati.addAll(c.getPoints());
+            }
+            BoardUtils.paintCages(b.getCages(), boardGUI);
+        }
+    }
 }

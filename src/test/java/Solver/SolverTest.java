@@ -1,8 +1,6 @@
 package Solver;
 
-import Generator.Board;
-import Generator.KenKenBuilder;
-import Generator.KenKenDirector;
+import Generator.*;
 import Operations.StandardOperationFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -75,7 +73,7 @@ class SolverTest {
         builder.addCage(c7);
 
         board = builder.build();
-        solver = new Solver(board);
+        solver = new Solver(board,5);
         solver.risolvi();
     }
     @Test
@@ -166,7 +164,7 @@ class SolverTest {
         builder.addCage(c17);
 
         board = builder.build();
-        solver = new Solver(board);
+        solver = new Solver(board,1);
         Instant start = Instant.now();
         solver.risolvi();
         Instant finish = Instant.now();
@@ -181,7 +179,7 @@ class SolverTest {
         KenKenDirector dir = new KenKenDirector(b);
         board = dir.createKenken();
         System.out.println(board.toString());
-        solver = new Solver(board);
+        solver = new Solver(board,3);
         solver.risolvi();
         board.primaSol();
         assertTrue(board.esisteSoluzione());

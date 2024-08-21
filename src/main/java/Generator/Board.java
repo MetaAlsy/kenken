@@ -1,8 +1,5 @@
 package Generator;
 
-import Solver.Cage;
-import Solver.Point;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;

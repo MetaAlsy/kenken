@@ -1,9 +1,12 @@
 package Ui;
 
+import Command.*;
+
+import Command.HistoryCommandHandler;
 import Generator.Board;
 import Generator.KenKenBuilder;
 import Generator.KenKenDirector;
-import Solver.Cage;
+import Generator.Cage;
 import Solver.Solver;
 import repository.BoardService;
 
@@ -23,10 +26,12 @@ public class KenKenController {
      private StartPanel startPanel;
      private BoardService boardConnection;
      private KenKenBuilder builder;
+     private HistoryCommandHandler command;
 
      public KenKenController(MainPanel mp){
          this.mainPanel=mp;
          this.boardConnection=new BoardService("jdbc:sqlite:kenken.db");
+         this.command = new HistoryCommandHandler();
          init();
      }
      private void init(){
@@ -47,6 +52,7 @@ public class KenKenController {
          board = new Board(size);//non serve
          this.builder = new KenKenBuilder(size);
          constructPanel.initBoard(size);
+         builder.attach(constructPanel);
          mainPanel.showPanel("ConstructScrean");
     }
 
@@ -69,12 +75,14 @@ public class KenKenController {
          mainPanel.showPanel("BoardScrean");
     }
 
-    public void createCage(Cage c) {
-         builder.addCage(c);
+    public void createCage(Cage c ) {
+         Command cageCommand = new CageCommand(builder,c);
+         command.handle(cageCommand);
     }
 
     public void inizia() {
          board=builder.build();
+         builder.detach(constructPanel);
          showBoardScrean();
     }
 
@@ -100,8 +108,8 @@ public class KenKenController {
          mainPanel.showPanel("StartScrean");
     }
 
-    public void solvePuzzle() {
-         Solver s = new Solver(board);
+    public void solvePuzzle(int max) {
+         Solver s = new Solver(board,max);
          s.risolviKenken();
          //soluzioni=s.getSoluzione();
          if(board.getNumSoluzioni()>0){
@@ -123,9 +131,7 @@ public class KenKenController {
     public void inserisciValore(int m,int n, String v){
         board.inserisciValore(m,n,v);
     }
-    public List<Cage> getCages(){
-         return board.getCages();
-    }
+
     public Board getBoard() {
          return board;
     }
@@ -135,6 +141,12 @@ public class KenKenController {
 
     public void showPriviusSol() {
        board.precedenteSol();
+    }
+    public void undo(){
+        command.undo();
+    }
+    public void redo(){
+        command.redo();
     }
     public void carica(byte[] buf) {
          try{

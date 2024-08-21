@@ -32,7 +32,18 @@ public class BoardPanel extends JPanel implements Observer  {
         returnButtun.addActionListener(e->controller.returnToMenu());
 
         JButton risolviButtun = new JButton("Risolvi");
-        risolviButtun.addActionListener(a->controller.solvePuzzle());
+        risolviButtun.addActionListener(a->{
+            String max = JOptionPane.showInputDialog(this,"Inserisci il numero massimo di soluzioni: ","Numero soluzioni",JOptionPane.QUESTION_MESSAGE);
+            if(max!=null && !max.isEmpty()){
+                int m = Integer.parseInt(max);
+                if(m>0)
+                    controller.solvePuzzle(m);
+                else
+                    JOptionPane.showMessageDialog(this,"Numero deve essere maggiore di zero");
+            }
+            else
+                JOptionPane.showMessageDialog(this,"Devi inserire il numero di soluzioni");
+        });
         BasicArrowButton nButton = new BasicArrowButton(BasicArrowButton.EAST);
         nButton.addActionListener(e->controller.showNextSol());
         BasicArrowButton pButton = new BasicArrowButton(BasicArrowButton.WEST);

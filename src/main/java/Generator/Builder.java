@@ -1,7 +1,6 @@
 package Generator;
 
 import Operations.Operation;
-import Solver.Point;
 
 import java.util.List;
 

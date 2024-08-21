@@ -1,13 +1,10 @@
 package Generator;
 
 import Operations.*;
-import Solver.Cage;
-import Solver.Point;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
-public class KenKenBuilder implements Builder{
+public class KenKenBuilder extends Subject implements Builder {
 
     private List<Cage> cages = new ArrayList<>();
     private int n;
@@ -23,6 +20,7 @@ public class KenKenBuilder implements Builder{
     public void addCage(Cage c){
         cages.add(c);
         point+=c.getPoints().size();
+        notifyObservers();
     }
 
     public Board build(){
@@ -35,7 +33,16 @@ public class KenKenBuilder implements Builder{
         return this.n;
     }
 
+    public void removeCage(Cage c) {
+        cages.remove(c);
+        point-=c.getPoints().size();
+        notifyObservers();
+    }
+    public List<Cage> getCages(){
+        return cages;
+    }
     public static void main(String ... args){
         new KenKenBuilder(4);
     }
+
 }
