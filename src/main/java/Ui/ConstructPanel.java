@@ -15,14 +15,15 @@ public class ConstructPanel extends JPanel implements Observer {
     private KenKenController controller;
     private JPanel[][] boardGUI;
     private JPanel constructPanel;
-    private StandardOperationFactory standardOperationFactory;
+    private StandardOperationFactory sof;
+
     private List<Point> points, visitati;
 
     public ConstructPanel(KenKenController controller){
         this.controller= controller;
         this.points = new ArrayList<>();
         this.visitati = new ArrayList<>();
-        this.standardOperationFactory = new StandardOperationFactory();
+        this.sof = new StandardOperationFactory();
         setLayout(new BorderLayout());
         constructPanel = new JPanel();
         add(constructPanel,BorderLayout.CENTER);
@@ -116,13 +117,13 @@ public class ConstructPanel extends JPanel implements Observer {
                 points.clear();
                 Cage c = null;
                 if(b1.isSelected())
-                    c=new Cage(punt,Integer.valueOf(numero.getText()), standardOperationFactory.createSum());
+                    c=new Cage(punt,Integer.valueOf(numero.getText()), sof.createSum());
                 if(b2.isSelected())
-                    c=new Cage(punt,Integer.valueOf(numero.getText()), standardOperationFactory.createSott());
+                    c=new Cage(punt,Integer.valueOf(numero.getText()), sof.createSott());
                 if(b3.isSelected())
-                    c=new Cage(punt,Integer.valueOf(numero.getText()), standardOperationFactory.createMul());
+                    c=new Cage(punt,Integer.valueOf(numero.getText()), sof.createMul());
                 if(b4.isSelected())
-                    c = new Cage(punt,Integer.valueOf(numero.getText()), standardOperationFactory.createDiv());
+                    c = new Cage(punt,Integer.valueOf(numero.getText()), sof.createDiv());
                 controller.createCage(c);
 
                 finestra.dispose();

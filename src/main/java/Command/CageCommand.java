@@ -8,7 +8,6 @@ import javax.swing.*;
 public class CageCommand implements Command{
     private KenKenBuilder builder;
     private Cage cage;
-    private JPanel[][] board;
 
     public CageCommand(KenKenBuilder b, Cage c){
         this.builder=b;

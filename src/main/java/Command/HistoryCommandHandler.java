@@ -3,7 +3,7 @@ package Command;
 import java.util.LinkedList;
 
 public class HistoryCommandHandler implements CommandHandler{
-    private int maxHistoryLength = 5;
+    private int maxHistoryLength ;
 
     private final LinkedList<Command> history = new LinkedList<>();
 
@@ -23,10 +23,8 @@ public class HistoryCommandHandler implements CommandHandler{
     public void handle(Command cmd) {
 
         if (cmd.doIt()) {
-            // restituisce true: può essere annullato
             addToHistory(cmd);
         } else {
-            // restituisce false: non può essere annullato
             history.clear();
         }
         if (redoList.size() > 0)

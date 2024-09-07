@@ -44,9 +44,14 @@ public class Board extends Subject implements Serializable {
             sb.append("\n");
             sb2.append("\n");
         }
-        return sb.toString()+"\n"+sb2.toString();
+        return sb+"\n"+sb2;
     }
     public boolean esisteSoluzione(){
+        if (verificaCages(cages, board)) return false;
+        return true;
+    }
+
+    public static boolean verificaCages(List<Cage> cages, int[][] board) {
         for (Cage c : cages) {
             List<Integer> nums = new ArrayList<>();
             for(Point punt:c.getPoints()){
@@ -54,7 +59,7 @@ public class Board extends Subject implements Serializable {
                     nums.add(board[punt.getM()][punt.getN()]);
             }
             if(nums.size()!=c.getPoints().size())
-                return false;
+                return true;
             int ris = 0;
             if(nums.size()>1){
                 ris=c.getOperation().calculate(nums);
@@ -63,24 +68,16 @@ public class Board extends Subject implements Serializable {
                 ris = nums.get(0);
             }
             if(ris != c.getTarget())
-                return false;
+                return true;
         }
-        return true;
+        return false;
     }
+
     public int getN(){
         return this.n;
     }
     public List<Cage> getCages() {
         return cages;
-    }
-    public void addCage(Cage cage){
-        cages.add(cage);
-        notifyObservers();
-    }
-
-    public void setCages(List<Cage> cages) {
-        this.cages = cages;
-        notifyObservers();
     }
     public void inserisciValore(int m,int n, String v){
         if(v!=null && !v.isEmpty()){
@@ -91,10 +88,6 @@ public class Board extends Subject implements Serializable {
             }
         }
     }
-    public void setBoard(int[][] board){
-        this.board=board;
-        notifyObservers();
-    }
     public void addSoluzione(int[][] s){
         if(!containsSol(s))
             this.soluzioni.add(s);
@@ -104,7 +97,7 @@ public class Board extends Subject implements Serializable {
             return soluzioni.size();
         return 0;
     }
-    public boolean containsSol(int[][] s){
+    private boolean containsSol(int[][] s){
         for(int[][] sol : soluzioni){
             if(Arrays.deepEquals(sol,s))
                 return true;

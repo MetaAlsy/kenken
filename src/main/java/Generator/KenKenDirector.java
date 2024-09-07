@@ -118,7 +118,7 @@ public class KenKenDirector {
         for(Point p:points){
             s+=board[p.getM()][p.getN()];
         }
-        builder.addCage(s,points, standardOperationFactory.createSum());
+        builder.addCage(new Cage(points,s,standardOperationFactory.createSum()));
     }
 
 
@@ -127,7 +127,8 @@ public class KenKenDirector {
         for(Point p:points)
             l.add(board[p.getM()][p.getN()]);
         l.sort(Comparator.reverseOrder());
-        builder.addCage(l.stream().reduce(0, (a, b) -> Math.abs(a - b)),points, standardOperationFactory.createSott());
+        //builder.addCage(l.stream().reduce(0, (a, b) -> Math.abs(a - b)),points, standardOperationFactory.createSott());
+        builder.addCage(new Cage(points,l.stream().reduce(0, (a, b) -> Math.abs(a - b)), standardOperationFactory.createSott()));
     }
 
 
@@ -136,7 +137,8 @@ public class KenKenDirector {
         for(Point p:points){
             m = board[p.getM()][p.getN()]*m;
         }
-        builder.addCage(m,points, standardOperationFactory.createMul());
+        //builder.addCage(m,points, standardOperationFactory.createMul());
+        builder.addCage(new Cage(points,m, standardOperationFactory.createMul()));
     }
 
 
@@ -145,6 +147,7 @@ public class KenKenDirector {
         for(Point p:points)
             l.add(board[p.getM()][p.getN()]);
         l.sort(Comparator.reverseOrder());
-        builder.addCage(l.stream().skip(1).reduce(l.get(0), (a, b) -> a / b),points, standardOperationFactory.createDiv());
+        //builder.addCage(l.stream().skip(1).reduce(l.get(0), (a, b) -> a / b),points, standardOperationFactory.createDiv());
+        builder.addCage(new Cage(points,l.stream().skip(1).reduce(l.get(0), (a, b) -> a / b),standardOperationFactory.createDiv()));
     }
 }

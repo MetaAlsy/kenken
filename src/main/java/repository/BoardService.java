@@ -19,7 +19,7 @@ public class BoardService {
     }
     public void saveBoard(Board b, String name){
         String sql = "INSERT INTO Board(name, board_data) values (?,?)";
-        try (/*Connection connection = DriverManager.getConnection(url);*/
+        try (
              PreparedStatement ps = connection.prepareStatement(sql);
              ByteArrayOutputStream bos = new ByteArrayOutputStream();
              ObjectOutputStream oos = new ObjectOutputStream(bos)) {
@@ -36,7 +36,7 @@ public class BoardService {
     public Board getBoard(int id){
         Board ret = null;
         String sql = "select board_data from Board where id = ? ";
-        try(/*Connection connection = DriverManager.getConnection(url);*/
+        try(
             PreparedStatement ps = connection.prepareStatement(sql)){
             ps.setInt(1,id);
             ResultSet rs = ps.executeQuery();
@@ -53,17 +53,12 @@ public class BoardService {
         return ret;
     }
     public Connection getConnection(){
-//        try{
-//            connection = DriverManager.getConnection(url);
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
         return connection;
     }
 
     public void deletePuzzle(int id) {
         String sql = "delete from Board where id=? ";
-        try(/*Connection connection = DriverManager.getConnection(url);*/
+        try(
             PreparedStatement ps = connection.prepareStatement(sql)){
             ps.setInt(1,id);
             ps.execute();

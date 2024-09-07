@@ -111,13 +111,8 @@ public class KenKenController {
     public void solvePuzzle(int max) {
          Solver s = new Solver(board,max);
          s.risolviKenken();
-         //soluzioni=s.getSoluzione();
          if(board.getNumSoluzioni()>0){
              JOptionPane.showMessageDialog(boardPanel,"Puzzle ha soluzioni: "+board.getNumSoluzioni());
-
-             //boardPanel.updateCount(n + 1);
-             //boardPanel.updateBoard(soluzioni.get(n),true);//updateBoard
-             //board.setBoard(soluzioni.get(n));
              board.primaSol();
          }else {
              JOptionPane.showMessageDialog(boardPanel, "Puzzle non ha soluzioni");
@@ -132,9 +127,7 @@ public class KenKenController {
         board.inserisciValore(m,n,v);
     }
 
-    public Board getBoard() {
-         return board;
-    }
+
     public void showNextSol() {
         board.prossimaSol();
     }

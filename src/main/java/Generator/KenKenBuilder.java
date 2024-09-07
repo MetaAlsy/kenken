@@ -13,10 +13,7 @@ public class KenKenBuilder extends Subject implements Builder {
     public KenKenBuilder(int n){
         this.n=n;
     }
-    public void addCage(int target, List<Point> points,Operation opration){
-        cages.add(new Cage(points,target,opration));
-        point+=points.size();
-    }
+
     public void addCage(Cage c){
         cages.add(c);
         point+=c.getPoints().size();
@@ -40,9 +37,6 @@ public class KenKenBuilder extends Subject implements Builder {
     }
     public List<Cage> getCages(){
         return cages;
-    }
-    public static void main(String ... args){
-        new KenKenBuilder(4);
     }
 
 }

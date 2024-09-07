@@ -12,7 +12,7 @@ import javax.swing.plaf.basic.BasicArrowButton;
 import java.awt.*;
 
 public class BoardPanel extends JPanel implements Observer  {
-    KenKenController controller;
+    private KenKenController controller;
     private JPanel[][] boardGUI;
     private JPanel boardPanel;
     private int size;
@@ -146,7 +146,7 @@ public class BoardPanel extends JPanel implements Observer  {
         boardPanel.revalidate();
         boardPanel.repaint();
     }
-    public void updateCount(int n){
+    private void updateCount(int n){
         if(n==0)
             countLabel.setText(String.valueOf(""));
         else

@@ -9,14 +9,13 @@ import java.util.*;
 public class Solver extends Backtracking<Point,Integer> {
     private final int n;
     private final int[][] board;
-    private final List<Cage> cages;
+
     private List<int[][]> soluzioni = new ArrayList<>();
     private Board puzzle;
     private int numSol;
     public Solver(Board puzzle, int numSol){
         this.n=puzzle.getN();
         this.board = new int[n][n];
-        this.cages = puzzle.getCages();
         this.puzzle = puzzle;
         this.numSol = numSol;
     }
@@ -76,24 +75,7 @@ public class Solver extends Backtracking<Point,Integer> {
                 if (board[row][col] == 0) return false;
             }
         }
-        for (Cage c : cages) {
-            List<Integer> nums = new ArrayList<>();
-            for(Point punt:c.getPoints()){
-                if(board[punt.getM()][punt.getN()]!=0)
-                    nums.add(board[punt.getM()][punt.getN()]);
-            }
-            if(nums.size()!=c.getPoints().size())
-                return false;
-            int ris = 0;
-            if(nums.size()>1){
-                 ris=c.getOperation().calculate(nums);
-                }
-             else {
-                ris = nums.get(0);
-            }
-            if(ris != c.getTarget())
-                return false;
-        }
+        if (Board.verificaCages(puzzle.getCages(), board)) return false;
         aggiungiSoluzione(board);
         numSol--;
         return true;
@@ -111,10 +93,7 @@ public class Solver extends Backtracking<Point,Integer> {
         puzzle.addSoluzione(s);
     }
 
-    public List<int[][]> getSoluzione(){
-        this.risolvi();
-        return soluzioni;
-    }
+
     public void risolviKenken(){
         this.risolvi();
     }
